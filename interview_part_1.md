@@ -20,4 +20,4 @@ int[] arr = new int[10];
 7. Что вы знаете о классах оболочках?
 
 В java есть примитивные типы данных (такие, как int, short, boolean и т.д.).  У примитивных типов есть объекты-аналоги - так называемые "классы оболочки", или "wrapper" (с англ. "обертка, упаковка").
-![MarineGEO circle logo](/images/MarineGEO_logo.png "MarineGEO logo")
+!(/images/Wrap_1.png "MarineGEO logo")
