@@ -56,4 +56,14 @@ class Box<T extends Garbage> {
 }
 ```
   
-  
+Здесь T extends Garbage означает, что в качестве T можно подставить Garbage или любой класс-наследник Garbage. Из уже известных нам классов это могут быть, например, Paper или Plastic.
+   
+Но можно ограничить тип и снизу. Это называется lower bounding и выглядит так:
+   
+```
+List<? super Garbage> example3 = new ArrayList<Garbage>();
+```
+   
+**Wildcards**
+   
+ В Java есть и специальный символ для обозначения неизвестного типа — «?». Его принято называть wildcard, дословно — «дикая карта».
