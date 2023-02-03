@@ -43,6 +43,17 @@ class Plastic extends Garbage{
        return  0.3;
    }
 }
+   
+class Box<T extends Garbage> {
+
+   private T item;
+
+   public double getItemWeight() {
+       // не скомпилируется
+       return item == null ? 0 : item.getWeight();
+   }
+//... остальные методы
+}
 ```
   
   
