@@ -69,3 +69,83 @@ public interface SomeInterface {
 ```
 MyIf.staticMethod()
 ```
+
+**Функциональный интерфейс**
+
+Функциональный интерфейс — это интерфейс, который содержит ровно один абстрактный метод, то есть описание метода без тела. Статические методы и методы по умолчанию при этом не в счёт, их в функциональном интерфейсе может быть сколько угодно.
+
+```
+@FunctionalInterface
+public interface ToIntBiFunction<T, U> {
+
+   /**
+    * Applies this function to the given arguments.
+    *
+    * @param t the first function argument
+    * @param u the second function argument
+    * @return the function result
+    */
+   int applyAsInt(T t, U u);
+}
+```
+
+```
+//Определяем свой функциональный интерфейс
+@FunctionalInterface
+interface MyPredicate {
+    boolean test(Integer value);
+}
+
+public class Tester {
+    public static void main(String[] args) throws Exception {
+        MyPredicate myPredicate = x -> x > 0;
+        System.out.println(myPredicate.test(10));   //true
+
+        //Аналогично, но используется встроенный функциональный интерфейс java.util.function.Predicate
+        Predicate<Integer> predicate = x -> x > 0;
+        System.out.println(predicate.test(-10));    //false
+    }
+}
+```
+
+**Лямбда**
+
+По сути, это анонимный (без имени) класс или метод. 
+
+Не будь лямбд, вызывать метод processTwoNumbers каждый раз приходилось бы так:
+
+```
+ToIntBiFunction<Integer, Integer> biFunction = new ToIntBiFunction<>() {
+    @Override
+    public int applyAsInt(Integer a, Integer b) {
+        return a + b;
+    }
+};
+
+processTwoNumbers(1, 2, biFunction);
+```
+
+biFunction в примере создана с использованием анонимных классов. Без этого нам пришлось бы создавать класс, реализующий интерфейс ToIntBiFunction, и объявлять в этом классе метод applyAsInt. А с анонимным классом мы всё это сделали на лету.
+
+А наша лямбда будет такой:
+
+```
+ToIntBiFunction<Integer, Integer> biFunction = (a, b) -> a + b;
+
+processTwoNumbers(1, 2, (a, b) -> a+b);
+```
+
+Где применяют лямбды?
+
+Допустим, нужно отсортировать коллекцию по последней букве каждого слова:
+
+```
+List<String> colors = Arrays.asList("Black", "White", "Red");
+Collections.sort(colors, (o1, o2) -> {
+   String o1LastLetter = o1.substring(o1.length() - 1);
+   String o2LastLetter = o2.substring(o2.length() - 1);
+   return o1LastLetter.compareTo(o2LastLetter);
+});
+```
+
+
