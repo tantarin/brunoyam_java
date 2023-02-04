@@ -61,6 +61,67 @@ s1.retainAll(s2); // s1 now contains only elements in both sets
 
 **TreeSet**
 
+ При добавлении новых элементов объект TreeSet автоматически проводит сортировку, помещая новый объект на правильное для него место. 
+
 ```
 Set<String> treeSet = new TreeSet<>(Comparator.comparing(String::length));
+```
+
+```
+class Element {
+    private Integer id;
+
+    // Other methods...
+}
+
+Comparator<Element> comparator = (ele1, ele2) -> {
+    return ele1.getId().compareTo(ele2.getId());
+};
+```
+
+```
+class Person{
+      
+    private String name;
+    private int age;
+    public Person(String n, int a){
+          
+        name=n;
+        age=a;
+    }
+    String getName(){return name;}
+    int getAge(){return age;}
+}
+
+class PersonNameComparator implements Comparator<Person>{
+  
+    public int compare(Person a, Person b){
+      
+        return a.getName().compareTo(b.getName());
+    }
+}
+class PersonAgeComparator implements Comparator<Person>{
+  
+    public int compare(Person a, Person b){
+      
+        if(a.getAge()> b.getAge())
+            return 1;
+        else if(a.getAge()< b.getAge())
+            return -1;
+        else
+            return 0;
+    }
+}
+
+Comparator<Person> pcomp = new PersonNameComparator().thenComparing(new PersonAgeComparator());
+TreeSet<Person> people = new TreeSet(pcomp);
+people.add(new Person("Tom", 23));
+people.add(new Person("Nick",34));
+people.add(new Person("Tom",10));
+people.add(new Person("Bill",14));
+ 
+for(Person  p : people){
+ 
+    System.out.println(p.getName() + " " + p.getAge());
+}
 ```
