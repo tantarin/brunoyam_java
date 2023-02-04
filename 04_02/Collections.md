@@ -58,3 +58,9 @@ Set<String> s1;
 Set<String> s2;
 s1.retainAll(s2); // s1 now contains only elements in both sets
  ```
+
+**TreeSet**
+
+```
+Set<String> treeSet = new TreeSet<>(Comparator.comparing(String::length));
+```
