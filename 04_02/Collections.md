@@ -68,18 +68,6 @@ Set<String> treeSet = new TreeSet<>(Comparator.comparing(String::length));
 ```
 
 ```
-class Element {
-    private Integer id;
-
-    // Other methods...
-}
-
-Comparator<Element> comparator = (ele1, ele2) -> {
-    return ele1.getId().compareTo(ele2.getId());
-};
-```
-
-```
 class Person{
       
     private String name;
