@@ -33,7 +33,21 @@ public class Test {
  
         System.out.println("Does myHashSet contain '1'? " + myHashSet.contains(1));
         System.out.println("Does myHashSet contain '11'? " + myHashSet.contains(11));
+        
+        HashSet<String> set=new HashSet();  
+         set.add("One");    
+         set.add("Two");    
+         set.add("Three");   
+         set.add("Four");  
+         set.add("Five");  
+         Iterator<String> i=set.iterator();  
+         while(i.hasNext())  
+         {  
+         System.out.println(i.next());  
+         } 
  
     }
 }
+
+
 ``
