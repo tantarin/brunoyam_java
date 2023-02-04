@@ -50,4 +50,11 @@ public class Test {
 }
 
 
-``
+```
+retainAll(collection) — удаляет из коллекции указанную в скобках коллекцию. Обратите внимание: retainAll, не removeAll;
+
+```
+Set<String> s1;
+Set<String> s2;
+s1.retainAll(s2); // s1 now contains only elements in both sets
+ ```
