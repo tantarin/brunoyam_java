@@ -104,3 +104,5 @@ class WildcardDemo {
 ```
 
 ![](/images/wild.jpg)
+
+![](/images/wild2.jpg)
