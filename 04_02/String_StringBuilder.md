@@ -10,3 +10,10 @@
 String s = " Wake up, Neo! ";
 s = s.toUpperCase();
 ```
+
+```
+StringBuilder builder = new StringBuilder();
+builder.append(ch); // можно добавить один символ
+builder.append(sometext); // а можно добавить готовую строку
+String completedString = builder.toString(); // результирующая строка
+```
