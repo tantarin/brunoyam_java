@@ -103,4 +103,4 @@ class WildcardDemo {
 }
 ```
 
-
+![](/images/wild.png)
