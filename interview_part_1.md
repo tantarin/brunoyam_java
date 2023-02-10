@@ -266,7 +266,64 @@ public class Calculator {
 
 16. **Что представляет собой полиморфизм**
 
+Полиморфизм — или способность объекта выполнять специализированные действия на основе его типа.
 
+Мы постоянно используем полиморфизм в базовых классах Java. Один очень простой пример — создание экземпляра класса ArrayList с объявлением типа как интерфейс List.
+
+```
+List<String> list = new ArrayList<>();
+```
+Или рассмотрим следующий пример:
+
+```
+public interface Swim {
+    void swim();
+}
+
+class Human implements Swim {
+    private String name;
+    private int age;
+
+    public Human(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public void swim() {
+        System.out.println(Я плаваю с помощью надувного круга.");
+    }
+}
+
+class Fish implements Swim{
+    private String name;
+
+    public Fish(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("Я рыба " + name + ". Я плыву, двигая плавниками.");
+
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Swim human = new Human("Антон", 6);
+        Swim fish = new Fish("кит");
+
+        List<Swim> swimmers = Arrays.asList(human, fish);
+        for (Swim s : swimmers) {
+            s.swim();
+        }
+    }
+}
+```
+
+Каким образом происходит выбор нужной реализации метода при выполнении программы? В Java по умолчанию используется позднее связывание (на стадии выполнения программы, а не во время компиляции, как в случае с ранним связыванием). Это значит, что при компиляции такого кода компилятор еще не знает, код из какого класса — Human или Fish он будет исполнять в методе swim. Это определится только при выполнении программы благодаря механизму динамической диспетчеризации — проверки типа объекта во время выполнения программы и выбора нужной реализации метода для этого типа. 
 
 18. **String в Java**
 
