@@ -7,3 +7,5 @@
   int count = ref.search("abc", arr);
   System.out.println("count = " + count); // count = 2
 ```
+
+Для массива чисел тоже должен работать!
