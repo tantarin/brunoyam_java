@@ -581,6 +581,8 @@ public interface BinaryOperator<T> {
 }
 ```
 
+28. heap и stack память в Java.
+
 
 
 
