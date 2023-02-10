@@ -585,6 +585,8 @@ public interface BinaryOperator<T> {
 
 29. сборщик мусора
 
+30. ключевое слово final
+
 
 
 
