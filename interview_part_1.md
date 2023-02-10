@@ -511,4 +511,31 @@ CarFilter carFilter = car -> car.getYear() >= 2010;
 var carFilter = (CarFilter) car -> car.getYear() >= 2010;
 ```
 
+26. Stream API
+
+Stream API — это набор инструментов, представленных в Java 8 для помощи в обработке последовательности элементов. Вы можете использовать эту функцию, чтобы уменьшить объем шаблонного кода и повысить производительность приложения. Это также помогает создавать более читаемые программы и позволяет нам удобно выполнять массовую обработку.
+
+Каждый промежуточный метод получает на вход результат выполнения с предыдущего этапа (стрим), отвечает только за свою часть работы и возвращает стрим.
+
+Последний (терминальный) метод либо не возвращает значения (void), либо возвращает результат иного, нежели стрим, типа.
+
+Получить список всех книг библиотеки, отсортированных по году издания:
+
+```
+Library library = new Library();
+List list = library.getBooks().stream()
+       .sorted(Comparator.comparing(Book::getIssueYear))
+       .collect(Collectors.toList());
+```
+
+Или
+
+```
+List<EmailAddress> addresses = library.getReaders().stream()
+       .filter(Reader::isSubscriber)
+       .filter(reader -> reader.getBooks().size() > 1)               
+       .map(Reader::getEmail).map(EmailAddress::new)
+       .collect(Collectors.toList());
+```
+
 
