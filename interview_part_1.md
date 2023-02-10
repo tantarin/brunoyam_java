@@ -538,4 +538,46 @@ List<EmailAddress> addresses = library.getReaders().stream()
        .collect(Collectors.toList());
 ```
 
+27. Встроенные функциональные интерфейсы
+
+Predicate<T>
+
+Consumer<T>
+
+Function<T,R>
+
+Supplier<T>
+
+UnaryOperator<T>
+
+BinaryOperator<T>
+
+Функциональный интерфейс Predicate<T> проверяет соблюдение некоторого условия. Если оно соблюдается, то возвращается значение true. В качестве параметра лямбда-выражение принимает объект типа T:
+
+```
+public interface Predicate<T> {
+    boolean test(T t);
+}
+
+import java.util.function.Predicate;
+ 
+public class LambdaApp {
+ 
+    public static void main(String[] args) {
+         
+        Predicate<Integer> isPositive = x -> x > 0;
+         
+        System.out.println(isPositive.test(5)); // true
+        System.out.println(isPositive.test(-7)); // false
+    }
+}
+```
+
+BinaryOperator<T> принимает в качестве параметра два объекта типа T, выполняет над ними бинарную операцию и возвращает ее результат также в виде объекта типа T:
+
+```
+public interface BinaryOperator<T> {
+    T apply(T t1, T t2);
+}
+```
 
