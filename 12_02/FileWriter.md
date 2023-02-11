@@ -87,6 +87,125 @@ public class WriterReader
 
 После окончания блока try .. catch наш FileWriter автоматически закроется. Обратите внимание — если файл не закрыть, то не гарантируется, что он корректно будет записан. Именно НЕ ГАРАНТИРУЕТСЯ. Т.е. может записаться, а может и нет. 
 
+**Работа с файлами**
+
+Класс File, определенный в пакете java.io, не работает напрямую с потоками. Его задачей является управление информацией о файлах и каталогах.
+
+```
+import java.io.File;
+
+public class Main {
+    public static void main(String args[])
+    {
+        try {
+            File f = new File("C:\\Users\\tanya\\untitled\\src\\ex.txt");
+            if (f.createNewFile())
+                System.out.println("File created");
+            else
+                System.out.println("File already exists");
+        }
+        catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+}
+```
+
+Если хотите создать новый файл и одновременно записать какую-нибудь информацию в нем, можете использовать метод FileOutputStream.write. Этот метод автоматически создает новый файл и записывает в нем контент.
+
+Метод FileOutputStream используется для записи байтов в файл. Если хотите записать символьную информацию, будет лучше использовать FileWriter.
+
+```
+import java.io.FileWriter;
+
+public class Main {
+    public static void main(String[] args) {
+        try(FileWriter fileWriter = new FileWriter("C:\\Users\\tanya\\untitled\\src\\ex.txt")) {
+            fileWriter.write("Brunoyam");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**Запись объектов в файл**
+
+```
+public class Main {
+
+    public static void main(String[] args) {
+        Employee emp = new Employee("Pankaj");
+
+        emp.setAge(35);
+        emp.setGender("Male");
+        emp.setRole("CEO");
+        System.out.println(emp);
+
+        try {
+            FileOutputStream fos = new FileOutputStream("EmployeeObject.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            // write object to file
+            oos.writeObject(emp);
+            System.out.println("Done");
+            // closing resources
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+
+class Employee implements Serializable {
+
+    private static final long serialVersionUID = -299482035708790407L;
+
+    private String name;
+    private String gender;
+    private int age;
+
+    private String role;
+    // private transient String role;
+
+    public Employee(String n) {
+        this.name = n;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee:: Name=" + this.name + " Age=" + this.age + " Gender=" + this.gender + " Role=" + this.role;
+    }
+}
+```
+
+
 Java NIO, или Java Non-blocking I/O (иногда — Java New I/O, “новый ввод-вывод”) предназначена для реализации высокопроизводительных операций ввода-вывода.
 
 **Path**
