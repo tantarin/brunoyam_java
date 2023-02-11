@@ -1,6 +1,22 @@
-‌Обычные программы на Java работают синхронно: строчки кода выполняются одна за другой в главном потоке. Но можно создать несколько тредов и управлять ими. Допустим, один может просто ждать, пока выполнится другой, а может в это время что-то вычислять.
+‌Многопоточность в Java — это выполнение двух или более потоков одновременно для максимального использования центрального процесса.
 
-Поток можно создать двумя способами:
+При помощи многопоточности мы можем выделить в приложении несколько потоков, которые будут выполнять различные задачи одновременно.
+
+Обычные программы на Java работают синхронно: строчки кода выполняются одна за другой в главном потоке. Но можно создать несколько тредов и управлять ими. Допустим, один может просто ждать, пока выполнится другой, а может в это время что-то вычислять.
+
+Когда запускается программа, начинает работать главный поток этой программы. От этого главного потока порождаются все остальные дочерние потоки.
+
+Посмотрим, что покажет программа, если воспользоваться методом Thread.currentThread(), который возвращает ссылку на текущую нить:
+
+```
+public class Main{
+    public static void main(String[] args){
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+```
+
+**Поток можно создать двумя способами:**
 
 -унаследовать класс Thread,
 
@@ -9,16 +25,44 @@
 **1 способ:**
 
 ```
-class MyThread extends Thread{
-    @Override
-    public void run(){
-        System.out.println("Hello, I’m " + Thread.currentThread());
+public class Main {
+    public static void main(String[] args) {
+        MyThread myThread = new MyThread();
+        System.out.println("Main thread started...");
+        myThread.start();
+        System.out.println("Main thread finished...");
     }
 }
-public class Main{
-    public static void main(String[] args){
-        MyThread myThread = new MyThread();
-        myThread.start();
+
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println("Hello, I am " + Thread.currentThread().getName());
+    }
+}
+```
+
+Аналогично созданию одного потока мы можем запускать сразу несколько потоков:
+
+```
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Main thread started...");
+        for(int i=1; i < 6; i++) {
+            new MyThread("MyThread " + i).start();
+        }
+        System.out.println("Main thread finished...");
+    }
+}
+
+class MyThread extends Thread {
+    public MyThread(String name) {
+        super(name);
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Hello, I am " + Thread.currentThread().getName());
     }
 }
 ```
@@ -26,6 +70,7 @@ public class Main{
 Вся логика нового треда выполняется в методе run(), а запускается он методом start().
 
 Обратите внимание: если на экземпляре класса Thread вместо метода start() вызвать run(), то код, написанный для другого потока, отлично выполнится, но выполнит его тот же тред, который и вызвал этот метод, а новый запущен не будет! Поэтому нужно пользоваться методом start().
+
 
 **2 способ:**
 
@@ -49,15 +94,108 @@ public class Main{
 
 Второй вариант лучше — он более гибкий. Например, если бы MyThread уже наследовал какой-либо класс, то было бы невозможно пойти первым путём, так как Java не поддерживает множественное наследование.
 
-Посмотрим, что покажет программа, если воспользоваться методом Thread.currentThread(), который возвращает ссылку на текущую нить:
+**Синхронизация потоков Java**
+
+В многопоточности Java присутствует асинхронное поведение. Если один поток записывает некоторые данные, а другой в это время их считывает, в приложении может возникнуть ошибка. Поэтому при необходимости доступа к общим ресурсам двум и более потоками используется синхронизация.
+
+В Java есть свои методы для обеспечения синхронизации. Как только поток достигает синхронизированного блока, другие потоки должны ожидать, пока текущий не выйдет из синхронизированного блока. 
+
+Синхронизация достигается в Java использованием зарезервированного слова synchronized. Вы можете использовать его в своих классах определяя синхронизированные методы или блоки.
+
+Это можно написать следующим образом:
+
+```
+Synchronized(object)
+{  
+        //Блок команд для синхронизации
+}
+```
+
+Давайте рассмотрим следующую задачу: есть банковский аккаунт с некоторым балансом, например, 50 руб. И есть 2 потока, которые хотят снимать оттуда одновременно по 10 руб. 
 
 ```
 public class Main{
-    public static void main(String[] args){
-        System.out.println(Thread.currentThread().getName());
+    public static void main(String[] args) {
+        Account account = new Account();
+        Thread one = new Thread(account);
+        Thread two = new Thread(account);
+        one.setName("Fred");
+        two.setName("Lucy");
+        one.start();
+        two.start();
+    }
+}
+
+class Account implements Runnable {
+    private int balance = 50;
+    public int getBalance() {
+        return balance;
+    }
+
+    public void withdraw(int amount) { //снять баланс
+        balance -= amount;
+    }
+
+    public void run() {
+        for (int x = 0; x < 5; x++) {
+            makeWithdrawal(10);
+            if (getBalance() < 0) {
+                System.out.println("account is overdrawn!");
+            }
+        }
+    }
+
+    private void makeWithdrawal(int amount) {
+        if (getBalance() >= amount) {
+            System.out.println(Thread.currentThread().getName()
+                    + " is going to withdraw");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            withdraw(amount);
+            System.out.println(Thread.currentThread().getName()
+                    + " completes the withdrawal. The balance is "
+                    + getBalance());
+        } else {
+            System.out.println("Not enough in account for "
+                    + Thread.currentThread().getName()
+                    + " to withdraw " + getBalance());
+        }
     }
 }
 ```
+
+Два потока в предыдущем примере находятся в состоянии гонок. Состояние гонок – это одновременный вызов в потоках исполнения одного и того же метода для того же самого объекта.
+
+Каждый объект в Java имеет ассоциированный с ним монитор. Только один поток исполнения может в одно, и то же время владеть монитором. Все другие потоки исполнения, пытающиеся войти в заблокированный монитор, будут приостановлены до тех пор, пока первый поток не выйдет из монитора. Говорят, что они ожидают монитор. 
+
+Когда выполнение кода доходит до оператора synchronized, монитор объекта счет блокируется, и на время его блокировки монопольный доступ к блоку кода имеет только один поток, который и произвел блокировку (Люси).
+
+После окончания работы блока кода, монитор объекта счет освобождается и становится доступным для других потоков.
+
+После освобождения монитора его захватывает другой поток, а все остальные потоки продолжают ожидать его освобождения.
+
+**Ожидание завершения потоков**
+
+Как правило, более распространенной ситуацией является случай, когда Main thread завершается самым последним. Для этого надо применить метод join(). В этом случае **текущий поток будет ожидать завершения потока, для которого вызван метод join**:
+
+```
+System.out.println("Main thread started...");
+        MyThread t= new MyThread("MyThread ");
+        t.start();
+        try{
+            t.join(); //main ожидает завершения потока MyThread
+        }
+        catch(InterruptedException e){
+
+            System.out.printf("%s has been interrupted", t.getName());
+        }
+        System.out.println("Main thread finished...");
+```
+
+
 
 Иногда при взаимодействии потоков встает вопрос о извещении одних потоков о действиях других. Например, действия одного потока зависят от результата действий другого потока, и надо как-то известить один поток, что второй поток произвел некую работу. И для подобных ситуаций у класса Object определено ряд методов:
 
