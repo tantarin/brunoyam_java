@@ -218,6 +218,28 @@ class Employee implements Serializable {
 
 Java NIO, или Java Non-blocking I/O (иногда — Java New I/O, “новый ввод-вывод”) предназначена для реализации высокопроизводительных операций ввода-вывода.
 
+Files.write() - это рекомендуемый способ создания файла, так как вам не придется беспокоиться о закрытии ресурсов IO.
+
+```
+public class FilesWriteFileExample {
+
+	public static void main(String[] args) {
+		Path path = Paths.get("D:/data/test.txt");
+		try {
+			String str = "This is write file Example";
+			byte[] bs = str.getBytes();
+			Path writtenFilePath = Files.write(path, bs);
+			System.out.println("Written content in file:\n"+ new String(Files.readAllBytes(writtenFilePath)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+```
+
+
 **Path**
 Path представляет из себя путь в файловой системе. Он содержит имя файла и список каталогов, определяющих путь к нему.
 
@@ -287,7 +309,26 @@ try {
 }
 ```
 
-Может быть не очень хорошая идея работать с байтовыми массивами, когда дело касается больших файлов. Это когда приходят потоки.
+Может быть не очень хорошая идея работать с байтовыми массивами, когда дело касается больших файлов. Тогда помогают потоки.
+
+**try-with-resources**
+
+Конструкцию try-with-resources ввели в Java 7. Она дает возможность объявлять один или несколько ресурсов в блоке try, которые будут закрыты автоматически без использования finally блока.
+
+В качестве ресурса можно использовать любой объект, класс которого реализует интерфейс java.lang.AutoCloseable или java.io.Closable.
+
+```
+String src = "c:\\projects\\log.txt";
+String dest = "c:\\projects\\copy.txt";
+
+try(FileInputStream input = new FileInputStream(src);
+
+FileOutputStream output = new FileOutputStream(dest))
+{
+   byte[] buffer = input.readAllBytes();
+   output.write(buffer);
+}
+```
 
 
 
