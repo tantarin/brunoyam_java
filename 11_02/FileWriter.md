@@ -1,12 +1,31 @@
  **Работа с потоками данных. IO vs. NIO**
  
- В Java основной функционал работы с потоками сосредоточен в классах из пакета java.io.
+В Java основной функционал работы с потоками сосредоточен в классах из пакета java.io.
+ 
+IO (Input & Output) API — это Java API, которое облегчает разработчикам работу с потоками. Скажем, мы получили какие-то данные (например, фамилия, имя и отчество) и нам нужно записать их в файл — в этот момент и приходит время использовать java.io.
+
+Разделяют два вида потоков ввода/вывода: байтовые и символьные.
+
+Байтовые: java.io.InputStream, java.io.OutputStream;
+
+Символьные: java.io.Reader, java.io.Writer;
  
 Объект, из которого можно считать данные, называется потоком ввода, а объект, в который можно записывать данные, - потоком вывода. Например, если надо считать содержание файла, то применяется поток ввода, а если надо записать в файл - то поток вывода.
 
-В основе всех классов, управляющих потоками байтов, находятся два абстрактных класса: InputStream (представляющий потоки ввода) и OutputStream (представляющий потоки вывода).
+Работа с файлами всегда несет за собой работу с исключениями: например, попытка создать новый файл, который уже существует, вызовет IOException. В данном случае работа приложения должна быть продолжена и пользователь должен получить уведомление о том, по какой причине файл не может быть создан. 
 
-Работают с символами: Writer и Reader. 
+```
+try {
+	File.createTempFile("prefix", "");
+} catch (IOException e) {
+	// Handle IOException
+}
+
+public static File createTempFile(String prefix, String suffix) throws IOException {
+...
+}
+```
+
 
 Схема работы с потоком в упрощенном виде выглядит так:
 
@@ -67,6 +86,79 @@ public class WriterReader
 ```
 
 После окончания блока try .. catch наш FileWriter автоматически закроется. Обратите внимание — если файл не закрыть, то не гарантируется, что он корректно будет записан. Именно НЕ ГАРАНТИРУЕТСЯ. Т.е. может записаться, а может и нет. 
+
+Java NIO, или Java Non-blocking I/O (иногда — Java New I/O, “новый ввод-вывод”) предназначена для реализации высокопроизводительных операций ввода-вывода.
+
+**Path**
+Path представляет из себя путь в файловой системе. Он содержит имя файла и список каталогов, определяющих путь к нему.
+
+```
+Path relative = Paths.get("Main.java");
+System.out.println("Файл: " + relative);
+//получение файловой системы
+System.out.println(relative.getFileSystem());
+```
+
+Paths — это совсем простой класс с единственным статическим методом get(). Его создали исключительно для того, чтобы из переданной строки или URI получить объект типа Path.
+
+```
+Path path = Paths.get("c:\\data\\file.txt");
+```
+
+Files — это утилитный класс, с помощью которого мы можем напрямую получать размер файла, копировать их, и не только.
+
+```
+Path path = Paths.get("files/file.txt");
+boolean pathExists = Files.exists(path);
+```
+
+Java IO (input-output) является потокоориентированным, а Java NIO (new/non-blocking io) – буфер-ориентированным.
+
+Когда дело доходит до чтения файлов, NIO.2 предлагает несколько способов сделать это — каждый со своими плюсами и минусами. Эти подходы заключаются в следующем:
+
+-Чтение файла в байтовый массив
+
+-Использование небуферизованных потоков
+
+-Использование буферизованных потоков
+
+```
+
+Path filePath = Paths.get("C:", "b.txt");
+ 
+if (Files.exists(filePath)) {
+    try {
+        List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+ 
+        for (String line : lines) {
+            System.out.println(line);
+        }
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+Просто подготовьте список строк и передайте его для write метода.
+
+```
+
+Path filePath = Paths.get("/home/jstas/b.txt");
+ 
+List<String> lines = new ArrayList<>();
+lines.add("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+lines.add("Aliquam sit amet justo nec leo euismod porttitor.");
+lines.add("Vestibulum id sagittis nulla, eu posuere sem.");
+lines.add("Cras commodo, massa sed semper elementum, ligula orci malesuada tortor, sed iaculis ligula ligula et ipsum.");
+ 
+try {
+    Files.write(filePath, lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+} catch (IOException e) {
+    throw new RuntimeException(e);
+}
+```
+
+Может быть не очень хорошая идея работать с байтовыми массивами, когда дело касается больших файлов. Это когда приходят потоки.
 
 
 
