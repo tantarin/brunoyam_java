@@ -148,11 +148,21 @@ public class Main {
             // write object to file
             oos.writeObject(emp);
             System.out.println("Done");
-            // closing resources
+
+
+            FileInputStream is = new FileInputStream("EmployeeObject.ser");
+            ObjectInputStream ois = new ObjectInputStream(is);
+            Employee emp2 = (Employee) ois.readObject();
+
+            ois.close();
+            is.close();
+            System.out.println(emp);
             oos.close();
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
