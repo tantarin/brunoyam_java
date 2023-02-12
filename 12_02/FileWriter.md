@@ -218,6 +218,11 @@ class Employee implements Serializable {
 
 Java NIO, или Java Non-blocking I/O (иногда — Java New I/O, “новый ввод-вывод”) предназначена для реализации высокопроизводительных операций ввода-вывода.
 
+Files.walkFileTree()
+Files.isSymbolicLink()
+Files.readAttributes()
+
+
 Files.write() - это рекомендуемый способ создания файла, так как вам не придется беспокоиться о закрытии ресурсов IO.
 
 ```
