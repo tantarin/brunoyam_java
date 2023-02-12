@@ -208,6 +208,30 @@ BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         FileWriter writer = new FileWriter(fileName);
 ```
 
+Считываем с консоли и записываем в файл:
+
+```
+public class ConsoleReaderExample {
+
+	public static void main(String[] args) {
+		String outputFileName = "file.txt";
+
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+			try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
+				String line;
+				while (!(line = reader.readLine()).equals("exit")) { // Прерывание цикла при написании строки exit
+					writter.write(line);
+				}
+			}
+		}
+         catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+```
+
 **Запись объектов в файл**
 
 ```
