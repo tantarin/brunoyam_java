@@ -141,6 +141,73 @@ public class Main {
 }
 ```
 
+**Чтение из файла**
+
+```
+public static void main(String[] args) throws Exception
+{
+ FileReader reader = new FileReader("c:/data.txt");
+ FileWriter writer = new FileWriter("c:/result.txt");
+
+ while (reader.ready()) //пока есть непрочитанные байты в потоке ввода
+ {
+  int data = reader.read(); //читаем один символ (char будет расширен до int)
+  writer.write(data); //пишем один символ (int будет обрезан/сужен до char)
+ }
+
+ //закрываем потоки после использования
+ reader.close();
+ writer.close();
+}
+```
+
+Чтобы прочесть содержимое файла используется класс BufferedReader. BufferedWriter пишет в файл с использованием буфера. А это рациональнее в плане работы с ресурсами.
+
+Java класс BufferedReader читает текст из потока ввода символов, буферизуя прочитанные символы, чтобы обеспечить эффективное считывание символов, массивов и строк. Можно указать в конструкторе вторым параметром размер буфера.
+
+
+```
+// В качестве объекта передаем открытый файл на основе класса FileReader
+BufferedReader br = new BufferedReader(file);
+
+// Считываем данные
+while((String line = br.readLine()) != null) {
+	// Выводим каждую отдельную строку в консоль
+	System.out.println(line);
+}
+```
+
+Пример:
+
+```
+public class FileWritterExample {
+
+	public static void main(String[] args) {
+		String outputFileName = "file.txt";
+		String[] array = { "one", "two", "three", "four" };
+
+		try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
+			for (String value : array) {
+				writter.write(value + "\n");
+			}
+		}
+        catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+```
+
+**Считываем с консоли**
+
+```
+BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String fileName = reader.readLine();
+
+        FileWriter writer = new FileWriter(fileName);
+```
+
 **Запись объектов в файл**
 
 ```
