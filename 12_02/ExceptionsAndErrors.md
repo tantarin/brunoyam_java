@@ -164,5 +164,105 @@ public class Train04 {
 }
 ```
 
+Еще пример:
+
+```
+class QuadraticEquation {
+    double a,b,c,x1,x2;
+
+    // конструктор
+    QuadraticEquation(double a, double b, double c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+
+    // метод, который решает квадратное уравнение
+    void Solution() {
+        double d; // дискриминант
+
+        try {
+            d = b*b - 4*a*c;
+
+            // учесть деление на 0
+            if (a==0)
+                throw new ArithmeticException("Деление на 0."); // создать исключение
+
+            // учесть корень из отрицательного числа
+            if (d<0)
+                throw new ArithmeticException("Уравнение не имеет корней."); // создать исключение
+
+            x1 = (-b - Math.sqrt(d))/(2*a);
+            x2 = (-b + Math.sqrt(d))/(2*a);
+
+            System.out.println("x1 = " + x1);
+            System.out.println("x2 = " + x2);
+        }
+        catch (ArithmeticException e) {
+            System.out.println(e); // вывести исключение, созданное в блоке try
+        }
+    }
+}
+```
+
+Пример исполтзования throws:
+
+```
+class NegativeNumberException extends Exception {
+    private double value;
+
+    // конструктор класса
+    NegativeNumberException(double _value) {
+        value = _value;
+    }
+
+    // переопределенный метод toString() класса Throwable,
+    // этот метод виводит информацию об исключении типа NegativeNumberException
+    public String toString() {
+        String msg = "Exception: " + value + " is a negative number!!!";
+        return msg;
+    }
+}
+
+// демонстрация исключения
+class DemoThrows {
+    int SumItems(int A[]) throws NegativeNumberException {
+        int i, sum=0;
+        for (i=0; i<10; i++) {
+            // если индекс за пределами массива, то сгенерировать исключение
+            if (i>A.length)
+                throw new ArrayIndexOutOfBoundsException("Индекс за пределами массива.");
+            if (A[i]<0)
+                throw new NegativeNumberException((double)A[i]);
+            sum += A[i];
+        }
+        return sum;
+    }
+}
+
+public class Train04 {
+    public static void main(String[] args) {
+        // вызов метода SumItems из класса DemoThrows
+        int M[] = { 1, -2, 3, 4, 5, 6, 7 };
+        DemoThrows dt = new DemoThrows(); // создать екземпляр класса DemoThrows
+        int summ=0;
+
+        try {
+            // вызвать метод, в котором генерируется
+            // исключение NegativeNumberException
+            summ = dt.SumItems(M);
+        }
+        catch (NegativeNumberException e) {
+            System.out.println("Отрицательное число: "+e);
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Перехвачено исключение: " + e);
+        }
+        finally {
+            System.out.println("Summ = " + summ);
+        }
+    }
+}
+```
 
 
