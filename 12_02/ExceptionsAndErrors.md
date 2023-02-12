@@ -77,4 +77,92 @@ public class TestExc {
 }
 ```
 
+Пример:
+
+```
+import java.util.Scanner;
+
+// Создание собственного класса исключения TriangleException
+// Создание собственного класса Triangle, реализующего треугольник по его сторонам
+class TriangleException extends Exception
+{
+  // переопределить метод toString(), описывающий исключение
+  public String toString()
+  {
+    return "Error. Bad sides of triangle.";
+  }
+}
+
+// объявить класс треугольник
+class Triangle
+{
+  // стороны треугольника
+  private double a,b,c;
+
+  // конструктор по умолчанию
+  public Triangle()
+  {
+    // равносторонний треугольник с длиной стороны 1
+    a = b = c = 1;
+  }
+
+  // параметризированный конструктор
+  public Triangle(double _a, double _b, double _c)
+  {
+    // использование класса исключения TriangleException
+    try {
+      // можно ли из сторон _a, _b, _c создать треугольник
+      if (((_a+_b)<_c)||((_a+_c)<_b)||((_b+_c)<_a))
+        throw new TriangleException();
+    }
+    catch(TriangleException e)
+    {
+      System.out.println("Exception: "+e.toString());
+      return;
+    }
+
+    // если стороны треугольника введены корректно,
+    // записать их во внутренние переменные класса
+    a = _a;
+    b = _b;
+    c = _c;
+  }
+
+  // метод возвращающий площадь треугольника
+  public double getArea()
+  {
+    // если стороны треугольника имеют корректные размеры,
+    // то проверку на корень из отрицательного числа делать не нужно
+    double p, s;
+    p = (a+b+c)/2; // полупериметр
+    s = Math.sqrt(p*(p-a)*(p-b)*(p-c)); // формула Герона
+    return s;
+  }
+}
+
+public class Train04 {
+  // функция main() тестирует работу классов Triangle и TriangleException
+  public static void main(String[] args) {
+    double a, b, c;
+    Scanner in = new Scanner(System.in);
+
+    // ввод a, b, c
+    System.out.print("a = ");
+    a = in.nextDouble();
+    System.out.print("b = ");
+    b = in.nextDouble();
+    System.out.print("c = ");
+    c = in.nextDouble();
+
+    // вычисление площади
+    Triangle tr = new Triangle(a,b,c);
+    double area = tr.getArea();
+    System.out.println("area = " + area);
+
+    in.close();
+  }
+}
+```
+
+
 
