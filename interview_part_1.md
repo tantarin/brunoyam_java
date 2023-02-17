@@ -777,6 +777,10 @@ class CountThread implements Runnable{
 }
 ```
 
+Каждый объект в Java имеет ассоциированный с ним монитор. Монитор представляет своего рода инструмент для управления доступа к объекту. Когда выполнение кода доходит до оператора synchronized, монитор объекта res блокируется, и на время его блокировки монопольный доступ к блоку кода имеет только один поток, который и произвел блокировку. После окончания работы блока кода, монитор объекта res освобождается и становится доступным для других потоков.
+
+После освобождения монитора его захватывает другой поток, а все остальные потоки продолжают ожидать его освобождения.
+
 35. **мьютекс**
 
 Мьютекс — это специальный объект для синхронизации потоков. Он «прикреплен» к каждому объекту в Java.
@@ -799,7 +803,55 @@ Mutex mutex = myObject.getMutex();
 mutex.free();
 ```
  
+36. **Методы, приостанавливающие выполнение потока (sleep(), wait() и join())**
 
+Самым простым типом ожидания является ожидание завершения другого потока.
+
+```
+public static void main(String []args) throws InterruptedException {
+	Runnable task = () -> {
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			System.out.println("Interrupted");
+		}
+	};
+	Thread thread = new Thread(task);
+	thread.start();
+	thread.join();
+	System.out.println("Finished");
+}
+```
+
+В данном примере новый поток будет спать 5 секунд. В то же время, главный поток main будет ждать, пока спящий поток не проснётся и не завершит свою работу.
+
+У Thread есть ещё один метод ожидания, который при этом связан с монитором. В отличие от sleep и join, его нельзя просто так вызвать. И зовут его wait. Выполняется метод wait на объекте, на мониторе которого мы хотим выполнить ожидание. Посмотрим пример:
+
+```
+public static void main(String []args) throws InterruptedException {
+	    Object lock = new Object();
+	    // task будет ждать, пока его не оповестят через lock
+	    Runnable task = () -> {
+	        synchronized(lock) {
+	            try {
+	                lock.wait();
+	            } catch(InterruptedException e) {
+	                System.out.println("interrupted");
+	            }
+	        }
+	        // После оповещения нас мы будем ждать, пока сможем взять лок
+	        System.out.println("thread");
+	    };
+	    Thread taskThread = new Thread(task);
+	    taskThread.start();
+        // Ждём и после этого забираем себе лок, оповещаем и отдаём лок
+	    Thread.currentThread().sleep(3000);
+	    System.out.println("main");
+	    synchronized(lock) {
+	        lock.notify();
+	    }
+}
+```
 
 
 
