@@ -1,6 +1,24 @@
 
 Класс Optional появился в Java 8. Задачей этого класса является предоставление решений на уровне типа-обертки для обеспечения удобства обработки возможных null-значений.
 
+Пустой элемент optional — это основной способ избежать исключения Null Pointer Exception при использовании API Optional.
+
+В потоке Optional любой null будет преобразован в пустой Optional. Пустой элемент Optional больше не будет обрабатываться. Вот как мы можем избежать исключения NullPointerException.
+
+Существует три способа инициализации объекта Optional:
+
+- Optional.of(T)
+ 
+- Optional.ofNullable(T)
+
+- Optional.empty()
+
+```
+String name = "brunoyam";
+    Optional<String> opt = Optional.of(name);
+    assertTrue(opt.isPresent());
+```
+
 Представим, что у нас есть класс UserRepository, который работает с хранилищем наших пользователей, в данном примере это будет обычная HashMap.
 
 Допустим, мы хотим найти пользователя в базе данных по идентификатору. После чего нам требуется вывести на консоль длину имени пользователя.
@@ -118,4 +136,14 @@ personRepository.findById(1L)
         .ifPresent(
                 firstName -> System.out.println("Длина твоего имени: " + firstName.length())
         );
+ ```
+
+Метод Optional.orElse возвращает переданное значение, если Optional пустой
+
+```
+ Optional<String> name = Optional.of("John");
+    System.out.println(name.orElse("blank")); //output John
+ 
+    Optional<Object> empty = Optional.empty();
+    System.out.println(empty.orElse("blank")); //output blank
  ```
