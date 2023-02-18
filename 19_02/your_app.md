@@ -30,3 +30,4 @@ CREATE TABLE CUSTOMER (
        email VARCHAR(250) DEFAULT NULL
 );
 ```
+
