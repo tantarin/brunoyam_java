@@ -1,3 +1,5 @@
+https://disk.yandex.ru/i/nBB-Hg71ua1tOg
+
 Добавим POM:
 
 ```
